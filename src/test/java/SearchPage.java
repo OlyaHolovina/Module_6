@@ -41,6 +41,9 @@ public class SearchPage {
     @FindBy(css="div[data-testid='price-and-discounted-price']>span:nth-child(2)")
     private WebElement priceForHotel;
 
+    @FindBy()
+    private WebElement searchCheckboxWorkingForTravel;
+
     public int priceForNight(){
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
         String totalPrice = priceForHotel.getText();
