@@ -1,6 +1,5 @@
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -14,35 +13,45 @@ import java.util.Calendar;
 public class HomePage {
 
     public WebDriver driver;
+    JavascriptExecutor jsExecutor;
+    Actions action;
 
     public HomePage(WebDriver driver){
         PageFactory.initElements(driver, this);
         this.driver = driver;
+        jsExecutor=(JavascriptExecutor)driver;
+        action = new Actions(driver);
     }
 
 
     @FindBy (css = "#onetrust-accept-btn-handler")
     private WebElement popUpWindow;
 
-    @FindBy(css = "input[type ='search']")
+    @FindBy(css = "input[placeholder='Where are you going?']")
     private WebElement searchDestination;
 
-    @FindBy(xpath = "//span[@class='sb-date-field__icon sb-date-field__icon-btn bk-svg-wrapper calendar-restructure-sb']")
-    private WebElement openCalend ;
+    @FindBy(css = "ul[data-testid=autocomplete-results]")
+    private WebElement resultsDestination;
 
-    @FindBy(xpath = "//td[@data-date='2022-12-01']")
+    @FindBy(css = "ul[data-testid=autocomplete-results] li:nth-of-type(1) div")
+    private WebElement resultDestination;
+
+    @FindBy(css = "div[data-testid=searchbox-datepicker] div")
+    private WebElement openCalendar ;
+
+    @FindBy(xpath = "//span[@data-date='2022-12-01']")
     private WebElement checkInDate;
 
-    @FindBy(xpath = "//td[@data-date='2022-12-08']")
+    @FindBy(xpath = "//span[@data-date='2022-12-08']")
     private WebElement checkOutDate;
 
-    @FindBy(css="div[data-bui-ref='calendar-next']")
-    private WebElement nextMontCalend;
+    @FindBy(css="div[data-testid='searchbox-datepicker'] button")
+    private WebElement nextMontCalendar;
 
     @FindBy(xpath = "//td[@data-date='2023-03-08']")
     private WebElement checkOutDate90;
 
-    @FindBy(xpath = "//button[@type='submit']")
+    @FindBy(css = "button.sb-searchbox__button")
     private WebElement buttonSearch;
 
     @FindBy(css =".fe_banner__message")
@@ -78,8 +87,11 @@ public class HomePage {
 
      public void inputSearch (String destination){
          popUpWindow.click();
-         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(8));
          searchDestination.sendKeys(destination);
+         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+         jsExecutor.executeScript("window.scrollBy(0,150)");
+         action.moveToElement(resultDestination).click().build().perform();
+
      }
 
     public void add2Adults1ChildrenOf3YearsOldAddSecondRoom (){
@@ -91,8 +103,10 @@ public class HomePage {
     }
 
      public void setCheckInDate (){
-         new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions.elementToBeClickable(openCalend)).click();
+         new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions
+                 .visibilityOf(openCalendar));
          checkInDate.click();
+
      }
 
      public void setCheckOutDate(){
@@ -103,13 +117,13 @@ public class HomePage {
          buttonSearch.click();
      }
 
-    public String getTextfromErrorMesage() {
+    public String getTextFromErrorMessage() {
         new WebDriverWait(driver, Duration.ofSeconds(15)).until(ExpectedConditions.invisibilityOf(driver.findElement(By.cssSelector(".fe_banner.fe_banner__accessible.fe_banner__red"))));
 
 return errorMessage.getAttribute("textContent");
     }
 
-     public String getTextfromTitle() {
+     public String getTextFromTitle() {
          return title.getText();
      }
 
@@ -118,9 +132,9 @@ return errorMessage.getAttribute("textContent");
      }
 
      public void clickOnDateAfter90D(){
-         nextMontCalend.click();
-         nextMontCalend.click();
-         nextMontCalend.click();
+         nextMontCalendar.click();
+         nextMontCalendar.click();
+         nextMontCalendar.click();
          checkOutDate90.click();
      }
 
@@ -139,6 +153,16 @@ return errorMessage.getAttribute("textContent");
         String message = errorMessage.getText();
         message = message.replaceAll("\\s+", "");
 
+    }
+
+    public void inputTextLocationWithJS(){
+        popUpWindow.click();
+        jsExecutor.executeScript("window.scrollBy(0,150)");
+        searchDestination.click();
+        searchDestination.sendKeys("Zakopane");
+
+        action.sendKeys(Keys.ENTER);
+        action.perform();
     }
 }
 

@@ -1,3 +1,4 @@
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -11,10 +12,13 @@ import java.time.Duration;
 public class SearchPage {
     public WebDriver driver;
     Actions actions;
+    JavascriptExecutor jsExecutor;
 
     public SearchPage(WebDriver driver){
         PageFactory.initElements(driver, this);
         this.driver = driver;
+        jsExecutor=(JavascriptExecutor)driver;
+        actions = new Actions(driver);
     }
 
     @FindBy(xpath = "//span[@data-testid='wishlist-icon']")
@@ -41,8 +45,23 @@ public class SearchPage {
     @FindBy(css="div[data-testid='price-and-discounted-price']>span:nth-child(2)")
     private WebElement priceForHotel;
 
-    @FindBy()
-    private WebElement searchCheckboxWorkingForTravel;
+    @FindBy(css="div [data-testid=availability-rate-information] span:nth-child(2) span:nth-child(2)")
+    private WebElement price;
+
+    @FindBy(css = "span[data-date='2022-12-01']")
+    private WebElement checkInDate;
+
+    @FindBy(css = "span[data-testid='searchbox-checkbox-question']")
+    private WebElement searchCheckboxWithHoverText;
+
+    @FindBy(css = "button[type='submit']")
+    private WebElement buttonSearch;
+
+    @FindBy(css="div[data-testid='filters-group-toggle-style']")
+    private WebElement setYourBudget;
+
+    @FindBy(css="input[type=range]~div:nth-of-type(1) span")
+    private WebElement range;
 
     public int priceForNight(){
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
@@ -53,12 +72,20 @@ public class SearchPage {
         return pricePerNight;
     }
 
+    public int priceForHotel(){
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        String totalPrice = price.getText();
+        totalPrice = totalPrice.replaceAll("[^\\d.]", "");
+        Integer pricePerNight = Integer.valueOf(totalPrice);
+        return pricePerNight;
+    }
+
     public void chooseBudgetFrom50to100(){
         budget50t0100.click();
         new WebDriverWait(driver,Duration.ofSeconds(10)).until(ExpectedConditions.visibilityOf(addBreakfast));
     }
 
-    public String getTextBreakf(){
+    public String getTextBreakfast(){
         return breakfostLabel.getText();
     }
 
@@ -67,7 +94,6 @@ public class SearchPage {
     }
 
     public void clickOnAddBreakfast(){
-        actions = new Actions(driver);
         actions.moveToElement(addBreakfast);
         addBreakfast.click();
     }
@@ -77,9 +103,38 @@ public class SearchPage {
     }
 
     public boolean appearPopUpWishList(){
-       // new WebDriverWait(driver, Duration.ofSeconds(3)).until(ExpectedConditions.visibilityOf(wishlistPopOver));
         boolean wiahlist;
         return  wiahlist = wishlistPopOver.isDisplayed();
     }
+
+    public void setCheckInDate (){
+        checkInDate.click();
+  }
+
+  public void hoverText(){
+      boolean result = false;
+      new WebDriverWait(driver,Duration.ofSeconds(10)).until(ExpectedConditions.visibilityOf(searchCheckboxWithHoverText));
+      actions.moveToElement(searchCheckboxWithHoverText).build().perform();
+      try {
+          Thread.sleep(3000);
+      } catch (InterruptedException e) {
+          e.printStackTrace();
+      }
+
+  }
+
+  public void clickOnSearch(){
+        buttonSearch.click();
+  }
+
+  public void clickOnBudgetTrue(){
+        setYourBudget.click();
+        jsExecutor.executeScript("window.scrollBy(0,150)");
+  }
+
+  public void setBudgetFrom60(){
+      actions.moveToElement(range).clickAndHold()
+              .moveToElement(range, 50, 0).click().build().perform();
+  }
 
 }
