@@ -1,3 +1,6 @@
+package com.booking.page;
+
+import com.booking.service.ConfProperties;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
@@ -10,22 +13,20 @@ import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.Calendar;
 
-public class HomePage {
-
-    public WebDriver driver;
+public class HomePage extends AbstractPage {
     JavascriptExecutor jsExecutor;
     Actions action;
 
     public HomePage(WebDriver driver){
+        super(driver);
         PageFactory.initElements(driver, this);
-        this.driver = driver;
         jsExecutor=(JavascriptExecutor)driver;
         action = new Actions(driver);
     }
 
 
     @FindBy (css = "#onetrust-accept-btn-handler")
-    private WebElement popUpWindow;
+    public WebElement popUpWindow;
 
     @FindBy(css = "input[placeholder='Where are you going?']")
     private WebElement searchDestination;
@@ -86,6 +87,7 @@ public class HomePage {
 
 
      public void inputSearch (String destination){
+         openPage();
          popUpWindow.click();
          searchDestination.sendKeys(destination);
          driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
@@ -163,6 +165,12 @@ return errorMessage.getAttribute("textContent");
 
         action.sendKeys(Keys.ENTER);
         action.perform();
+    }
+
+    @Override
+    public HomePage openPage(){
+         driver.navigate().to(ConfProperties.getProperty("page"));
+         return this;
     }
 }
 

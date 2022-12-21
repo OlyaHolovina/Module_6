@@ -5,14 +5,14 @@
   <test name="Chrome Test">
     <parameter name="Port" value="CR"/>
     <classes>
-      <class name="AllTest"/>
+      <class name="com.booking.test.AllTest"/>
     </classes>
   </test>
 
   <test name="Firefox Test">
     <parameter name="Port" value="FF"/>
     <classes>
-      <class name="AllTest"/>
+      <class name="com.booking.test.AllTest"/>
     </classes>
   </test>
 

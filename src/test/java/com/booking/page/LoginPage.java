@@ -1,3 +1,10 @@
+package com.booking.page;
+
+import com.booking.service.ConfProperties;
+import com.booking.model.User;
+import com.booking.utils.TestListener;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -7,13 +14,15 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
-public class LoginPage {
+public class LoginPage extends AbstractPage {
 
-    public WebDriver driver;
+    HomePage homePage;
+    private Logger log = LogManager.getRootLogger();
 
     public LoginPage(WebDriver driver){
+        super(driver);
         PageFactory.initElements(driver, this);
-        this.driver = driver;
+        this.homePage = new HomePage(driver);
     }
 
     @FindBy(xpath = "//input[@type='email']")
@@ -53,6 +62,32 @@ public class LoginPage {
 
     public String getName() {
         new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions.visibilityOf(name));
+        return name.getText();
+    }
+
+    @Override
+    public LoginPage openPage(){
+     driver.navigate().to(ConfProperties.getProperty("page"));
+     return this;
+    }
+
+    public LoginPage login(User user){
+        homePage.popUpWindow.click();
+       homePage.clickOnSignInButton();
+        new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions.elementToBeClickable(email)).click();
+        email.sendKeys(user.getEmail());
+        new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions.elementToBeClickable(goButton)).click();
+        clickOnGoButton();
+        new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions.elementToBeClickable(password)).click();
+        password.sendKeys(user.getPassword());
+        new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions.elementToBeClickable(submit)).click();
+        clickOnSubmitButton();
+//        logger.info();
+        return new LoginPage(driver);
+    }
+
+    public String getLoggedInUserName(){
+        new WebDriverWait(driver, Duration.ofSeconds(15)).until(ExpectedConditions.elementToBeClickable(name)).click();
         return name.getText();
     }
 

@@ -1,0 +1,9 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+
+<suite name="AllTest" verbose="1" >
+    <test name="AllTest">
+        <classes>
+            <class name="com.booking.test.AllTest"></class>
+        </classes>
+    </test>
+</suite>

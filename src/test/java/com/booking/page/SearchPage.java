@@ -1,3 +1,6 @@
+package com.booking.page;
+
+import com.booking.service.ConfProperties;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -9,14 +12,13 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
-public class SearchPage {
-    public WebDriver driver;
+public class SearchPage extends AbstractPage{
     Actions actions;
     JavascriptExecutor jsExecutor;
 
     public SearchPage(WebDriver driver){
+        super(driver);
         PageFactory.initElements(driver, this);
-        this.driver = driver;
         jsExecutor=(JavascriptExecutor)driver;
         actions = new Actions(driver);
     }
@@ -135,6 +137,11 @@ public class SearchPage {
   public void setBudgetFrom60(){
       actions.moveToElement(range).clickAndHold()
               .moveToElement(range, 50, 0).click().build().perform();
+  }
+
+  public SearchPage openPage(){
+        driver.navigate().to(ConfProperties.getProperty("page"));
+        return this;
   }
 
 }
