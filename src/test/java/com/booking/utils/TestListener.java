@@ -19,17 +19,7 @@ import java.time.format.DateTimeFormatter;
 public class TestListener implements ITestListener {
     private Logger log = LogManager.getRootLogger();
 
-    public void onTestStart(ITestListener ITestResult){
 
-    }
-
-    public void onTestSuccess(ITestListener ITestResult){
-
-    }
-
-    public void onTestFailure(ITestListener ITestResult){
-        saveScreenshot();
-    }
 
     private void saveScreenshot(){
         File screenCapture = ((TakesScreenshot)DriverSingletone

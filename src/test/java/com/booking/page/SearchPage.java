@@ -78,8 +78,7 @@ public class SearchPage extends AbstractPage{
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
         String totalPrice = price.getText();
         totalPrice = totalPrice.replaceAll("[^\\d.]", "");
-        Integer pricePerNight = Integer.valueOf(totalPrice);
-        return pricePerNight;
+        return Integer.valueOf(totalPrice);
     }
 
     public void chooseBudgetFrom50to100(){
@@ -105,8 +104,7 @@ public class SearchPage extends AbstractPage{
     }
 
     public boolean appearPopUpWishList(){
-        boolean wiahlist;
-        return  wiahlist = wishlistPopOver.isDisplayed();
+        return   wishlistPopOver.isDisplayed();
     }
 
     public void setCheckInDate (){
@@ -114,7 +112,6 @@ public class SearchPage extends AbstractPage{
   }
 
   public void hoverText(){
-      boolean result = false;
       new WebDriverWait(driver,Duration.ofSeconds(10)).until(ExpectedConditions.visibilityOf(searchCheckboxWithHoverText));
       actions.moveToElement(searchCheckboxWithHoverText).build().perform();
       try {
@@ -140,7 +137,7 @@ public class SearchPage extends AbstractPage{
   }
 
   public SearchPage openPage(){
-        driver.navigate().to(ConfProperties.getProperty("page"));
+        driver.navigate().to(properties.getProperty("page"));
         return this;
   }
 
