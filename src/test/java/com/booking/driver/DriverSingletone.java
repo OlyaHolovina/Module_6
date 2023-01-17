@@ -14,16 +14,13 @@ public class DriverSingletone {
 
     public static WebDriver getDriver() {
         if (null == driver) {
-            switch (System.getProperty("browser")) {
-                case "firefox": {
-                    WebDriverManager.firefoxdriver().setup();
-                    driver = new FirefoxDriver();
-                    break;
-                }
-                default: {
-                    WebDriverManager.chromedriver().version("108.0.5359.71").setup();
-                    driver = new ChromeDriver();
-                }
+            String browser = System.getProperty("browser");
+            if ("firefox".equals(browser)) {
+                WebDriverManager.firefoxdriver().setup();
+                driver = new FirefoxDriver();
+            } else {
+                WebDriverManager.chromedriver().version("108.0.5359.71").setup();
+                driver = new ChromeDriver();
             }
             driver.manage().window().maximize();
         }

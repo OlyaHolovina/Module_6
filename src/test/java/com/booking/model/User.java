@@ -51,8 +51,4 @@ public class User {
                 Objects.equals(getPassword(), user.getPassword());
     }
 
-//    @Override
-//    public int hashcode(){
-//        return Objects.hash(getUsername(), getPassword(), getUserEmail());
-//    }
 }

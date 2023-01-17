@@ -2,7 +2,6 @@ package com.booking.page;
 
 import com.booking.service.ConfProperties;
 import com.booking.model.User;
-import com.booking.utils.TestListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
@@ -43,7 +42,7 @@ public class LoginPage extends AbstractPage {
 
     public void setEmail(){
         new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions.elementToBeClickable(email)).click();
-        email.sendKeys(ConfProperties.getProperty("login"));
+        email.sendKeys(properties.getProperty("login"));
     }
 
     public void clickOnGoButton(){
@@ -53,7 +52,7 @@ public class LoginPage extends AbstractPage {
     public void setPassword(){
         new WebDriverWait(driver, Duration.ofSeconds(5)).
                     until(ExpectedConditions.visibilityOf(password))
-                        .sendKeys(ConfProperties.getProperty("password"));
+                        .sendKeys(properties.getProperty("password"));
     }
 
     public void clickOnSubmitButton(){
@@ -65,15 +64,14 @@ public class LoginPage extends AbstractPage {
         return name.getText();
     }
 
-    @Override
-    public LoginPage openPage(){
-     driver.navigate().to(ConfProperties.getProperty("page"));
+    public LoginPage openPage() {
+     driver.navigate().to(properties.getProperty("page"));
      return this;
     }
 
     public LoginPage login(User user){
-        homePage.popUpWindow.click();
-       homePage.clickOnSignInButton();
+        homePage.acceptCookiesPopup();
+       homePage.signIn();
         new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions.elementToBeClickable(email)).click();
         email.sendKeys(user.getEmail());
         new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions.elementToBeClickable(goButton)).click();

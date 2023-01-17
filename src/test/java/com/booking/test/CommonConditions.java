@@ -3,12 +3,14 @@ package com.booking.test;
 import com.booking.driver.DriverSingletone;
 import com.booking.page.HomePage;
 import com.booking.page.LoginPage;
+import com.booking.page.PageObjectFactory;
 import com.booking.page.SearchPage;
+import com.booking.service.ConfProperties;
 import com.booking.utils.TestListener;
 import org.openqa.selenium.WebDriver;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Listeners;
+import org.testng.annotations.*;
+
+import java.time.Duration;
 
 @Listeners({TestListener.class})
 public class CommonConditions {
@@ -17,16 +19,24 @@ public class CommonConditions {
     HomePage homePage;
     LoginPage loginPage;
     SearchPage searchPage;
+    ConfProperties properties = new ConfProperties();
+    private PageObjectFactory pageFactory;
 
-    @BeforeMethod()
+    @BeforeClass()
     public void setUp(){
         driver = DriverSingletone.getDriver();
 
-        this.homePage = new HomePage(driver);
-        this.loginPage = new LoginPage(driver);
-        this.searchPage = new SearchPage(driver);
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+
+        this.pageFactory = new PageObjectFactory(driver);
+        this.homePage = pageFactory.getHomePage();
+        this.loginPage = pageFactory.getLoginPage();
+        this.searchPage = pageFactory.getSearchPage();
+
+        this.homePage.openPage();
     }
 
-    @AfterMethod(alwaysRun = true)
+
+    @AfterClass(alwaysRun = true)
     public void stopBrowser(){DriverSingletone.closeDriver();}
 }

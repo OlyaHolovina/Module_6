@@ -17,16 +17,16 @@ public class HomePage extends AbstractPage {
     JavascriptExecutor jsExecutor;
     Actions action;
 
-    public HomePage(WebDriver driver){
+    public HomePage(WebDriver driver) {
         super(driver);
         PageFactory.initElements(driver, this);
-        jsExecutor=(JavascriptExecutor)driver;
+        jsExecutor = (JavascriptExecutor) driver;
         action = new Actions(driver);
     }
 
 
-    @FindBy (css = "#onetrust-accept-btn-handler")
-    public WebElement popUpWindow;
+    @FindBy(css = "#onetrust-accept-btn-handler")
+    private WebElement popUpWindow;
 
     @FindBy(css = "input[placeholder='Where are you going?']")
     private WebElement searchDestination;
@@ -38,7 +38,7 @@ public class HomePage extends AbstractPage {
     private WebElement resultDestination;
 
     @FindBy(css = "div[data-testid=searchbox-datepicker] div")
-    private WebElement openCalendar ;
+    private WebElement openCalendar;
 
     @FindBy(xpath = "//span[@data-date='2022-12-01']")
     private WebElement checkInDate;
@@ -46,7 +46,7 @@ public class HomePage extends AbstractPage {
     @FindBy(xpath = "//span[@data-date='2022-12-08']")
     private WebElement checkOutDate;
 
-    @FindBy(css="div[data-testid='searchbox-datepicker'] button")
+    @FindBy(css = "div[data-testid='searchbox-datepicker'] button")
     private WebElement nextMontCalendar;
 
     @FindBy(xpath = "//td[@data-date='2023-03-08']")
@@ -55,7 +55,7 @@ public class HomePage extends AbstractPage {
     @FindBy(css = "button.sb-searchbox__button")
     private WebElement buttonSearch;
 
-    @FindBy(css =".fe_banner__message")
+    @FindBy(css = ".fe_banner__message")
     private WebElement errorMessage;
 
     @FindBy(xpath = "//h1[contains(text(),'Córdoba:')]")
@@ -86,91 +86,76 @@ public class HomePage extends AbstractPage {
     private WebElement childField;
 
 
-     public void inputSearch (String destination){
-         openPage();
-         popUpWindow.click();
-         searchDestination.sendKeys(destination);
-         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-         jsExecutor.executeScript("window.scrollBy(0,150)");
-         action.moveToElement(resultDestination).click().build().perform();
+    public void inputSearch(String destination) {
+        popUpWindow.click();
+        searchDestination.sendKeys(destination);
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        jsExecutor.executeScript("window.scrollBy(0,150)");
+        action.moveToElement(resultDestination).click().build().perform();
 
-     }
+    }
 
-    public void add2Adults1ChildrenOf3YearsOldAddSecondRoom (){
+    public void add2Adults1ChildrenOf3YearsOldAddSecondRoom() {
         guestsFrame.click();
-        new WebDriverWait(driver,Duration.ofSeconds(5)).until(ExpectedConditions.elementToBeClickable(addAdult));
-        new WebDriverWait(driver,Duration.ofSeconds(10)).until(ExpectedConditions.visibilityOf(addRoom));
+        new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions.elementToBeClickable(addAdult));
+        new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions.visibilityOf(addRoom));
 
         addRoom.click();
     }
 
-     public void setCheckInDate (){
-         new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions
-                 .visibilityOf(openCalendar));
-         checkInDate.click();
+    public void setCheckInDate() {
+        new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions
+                .visibilityOf(openCalendar));
+        checkInDate.click();
 
-     }
+    }
 
-     public void setCheckOutDate(){
-         new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions.elementToBeClickable(checkOutDate)).click();
-     }
+    public void setCheckOutDate() {
+        new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions.elementToBeClickable(checkOutDate)).click();
+    }
 
-     public void clickOnSearch(){
-         buttonSearch.click();
-     }
+    public void clickOnSearch() {
+        buttonSearch.click();
+    }
 
     public String getTextFromErrorMessage() {
         new WebDriverWait(driver, Duration.ofSeconds(15)).until(ExpectedConditions.invisibilityOf(driver.findElement(By.cssSelector(".fe_banner.fe_banner__accessible.fe_banner__red"))));
 
-return errorMessage.getAttribute("textContent");
+        return errorMessage.getAttribute("textContent");
     }
 
-     public String getTextFromTitle() {
-         return title.getText();
-     }
+    public String getTextFromTitle() {
+        return title.getText();
+    }
 
-     public void clickOnSignInButton(){
+    public void signIn() {
         signInButton.click();
-     }
-
-     public void clickOnDateAfter90D(){
-         nextMontCalendar.click();
-         nextMontCalendar.click();
-         nextMontCalendar.click();
-         checkOutDate90.click();
-     }
-
-     public String add90Days() throws ParseException {
-         String date = "2022-12-01";
-         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-         Calendar calendar = Calendar.getInstance();
-         calendar.setTime(sdf.parse(date));
-         calendar.add(Calendar.DATE, 90);
-         date = sdf.format(calendar.getTime());
-         return date;
-     }
-
-    public void validateReservationMessage() {
-
-        String message = errorMessage.getText();
-        message = message.replaceAll("\\s+", "");
-
     }
 
-    public void inputTextLocationWithJS(){
+    public void clickOnDateAfter90D() {
+        nextMontCalendar.click();
+        nextMontCalendar.click();
+        nextMontCalendar.click();
+        checkOutDate90.click();
+    }
+
+    public void inputTextLocationWithJS(String input) {
         popUpWindow.click();
         jsExecutor.executeScript("window.scrollBy(0,150)");
         searchDestination.click();
-        searchDestination.sendKeys("Zakopane");
+        searchDestination.sendKeys(input);
 
         action.sendKeys(Keys.ENTER);
         action.perform();
     }
 
-    @Override
-    public HomePage openPage(){
-         driver.navigate().to(ConfProperties.getProperty("page"));
-         return this;
+    public HomePage openPage() {
+        driver.navigate().to(properties.getProperty("page"));
+        return this;
+    }
+
+    public void acceptCookiesPopup() {
+        popUpWindow.click();
     }
 }
 

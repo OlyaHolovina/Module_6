@@ -6,10 +6,10 @@ import java.util.Properties;
 
 public class ConfProperties {
 
-    protected static FileInputStream fileInputStream;
-    protected static Properties properties;
+    protected FileInputStream fileInputStream;
+    protected Properties properties;
 
-    static{
+    public ConfProperties() {
         try{
             fileInputStream = new FileInputStream("src/test/resources/conf.properties");
             properties = new Properties();
@@ -27,7 +27,7 @@ public class ConfProperties {
         }
     }
 
-    public static String getProperty (String key){
+    public String getProperty (String key){
         return properties.getProperty(key);
     }
 }
