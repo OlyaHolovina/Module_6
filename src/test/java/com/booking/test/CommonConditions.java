@@ -16,10 +16,10 @@ import java.time.Duration;
 public class CommonConditions {
 
     protected WebDriver driver;
-    HomePage homePage;
-    LoginPage loginPage;
-    SearchPage searchPage;
-    ConfProperties properties = new ConfProperties();
+    protected HomePage homePage;
+    protected LoginPage loginPage;
+    protected SearchPage searchPage;
+    protected ConfProperties properties = new ConfProperties();
     private PageObjectFactory pageFactory;
 
     @BeforeClass()
