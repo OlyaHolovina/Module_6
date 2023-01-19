@@ -84,6 +84,20 @@ public class LoginPage extends AbstractPage {
         return new LoginPage(driver);
     }
 
+    public LoginPage login(String mail, String pas){
+        homePage.acceptCookiesPopup();
+        homePage.signIn();
+        new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions.elementToBeClickable(email)).click();
+        email.sendKeys(mail);
+        new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions.elementToBeClickable(goButton)).click();
+        clickOnGoButton();
+        new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions.elementToBeClickable(password)).click();
+        password.sendKeys(pas);
+        new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions.elementToBeClickable(submit)).click();
+        clickOnSubmitButton();
+        return new LoginPage(driver);
+    }
+
     public String getLoggedInUserName(){
         new WebDriverWait(driver, Duration.ofSeconds(15)).until(ExpectedConditions.elementToBeClickable(name)).click();
         return name.getText();

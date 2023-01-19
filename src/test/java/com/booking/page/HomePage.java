@@ -40,7 +40,7 @@ public class HomePage extends AbstractPage {
     @FindBy(css = "div[data-testid=searchbox-datepicker] div")
     private WebElement openCalendar;
 
-    @FindBy(xpath = "//span[@data-date='2022-12-01']")
+    @FindBy(xpath = "//span[@data-date='2023-12-01']")
     private WebElement checkInDate;
 
     @FindBy(xpath = "//span[@data-date='2022-12-08']")
